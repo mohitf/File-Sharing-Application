@@ -58,7 +58,7 @@ public class Server {
 		return list;
 	}
     
-    private boolean match(String str1,String str2){
+	private boolean match(String str1,String str2){
 		int len1 = str1.length();
 		int len2 = str2.length();
 		if(len1>len2){
@@ -66,7 +66,7 @@ public class Server {
 		}
 		for(int i=0;i<=len2-len1;i++){
 			if((str1.toLowerCase()).equals((str2.substring(i,i+len1)).toLowerCase())){
-		    	return true;
+				return true;
 			}
 		}
 		return false;
@@ -89,13 +89,13 @@ public class Server {
 	}
 	
 	public void sendFile(OutputStream out1,ObjectOutputStream out2,String str){
-        for(int i=0;i<nameList.size();i++){
-            if(nameList.get(i).equals(str)){
-                peerList.get(i).sendFile(out1,out2,str);
-                return;
-            }
-        }
-    }
+		for(int i=0;i<nameList.size();i++){
+			if(nameList.get(i).equals(str)){
+				peerList.get(i).sendFile(out1,out2,str);
+				return;
+			}
+		}
+	}
 }
 
 class PeerThread implements Runnable{
@@ -161,7 +161,7 @@ class PeerThread implements Runnable{
 		}
 		System.out.println("Received all files");
 		System.out.println();
-    }
+	}
 	
 	private void requestFile(String str){
 		ArrayList<String> results = server.getList(str);
