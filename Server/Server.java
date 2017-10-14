@@ -70,7 +70,7 @@ public class Server {
 			}
 		}
 		return false;
-    }
+	}
     
 	public void addFile(String fname,PeerThread pt){
 		nameList.add(fname);
