@@ -49,27 +49,27 @@ public class Server {
 	}
 	
 	public ArrayList<String> getList(String str){
-        ArrayList<String> list = new ArrayList<String>();
-        for(int i=0;i<nameList.size();i++){
-            if(match(str,nameList.get(i))){
-                list.add(nameList.get(i));
-            }
-        }
-        return list;
-    }
+		ArrayList<String> list = new ArrayList<String>();
+		for(int i=0;i<nameList.size();i++){
+		    if(match(str,nameList.get(i))){
+			list.add(nameList.get(i));
+		    }
+		}
+		return list;
+	}
     
     private boolean match(String str1,String str2){
-        int len1 = str1.length();
-        int len2 = str2.length();
-        if(len1>len2){
-            return false;
-        }
-        for(int i=0;i<=len2-len1;i++){
-            if((str1.toLowerCase()).equals((str2.substring(i,i+len1)).toLowerCase())){
-                return true;
-            }
-        }
-        return false;
+		int len1 = str1.length();
+		int len2 = str2.length();
+		if(len1>len2){
+			return false;
+		}
+		for(int i=0;i<=len2-len1;i++){
+			if((str1.toLowerCase()).equals((str2.substring(i,i+len1)).toLowerCase())){
+		    	return true;
+			}
+		}
+		return false;
     }
     
 	public void addFile(String fname,PeerThread pt){
@@ -145,74 +145,74 @@ class PeerThread implements Runnable{
 	}
 	
 	private void shareFiles(){
-        System.out.println();
-        System.out.println("Receiving files for sharing");
-        try{
-	        while(true){
-	        	String str = (String)in3.readObject();
-	            if(str.equals("DONE SHARING FILES")){
-	            	break;
-	            }
-	            System.out.println(str);
-	            server.addFile(str,this);
-	        }
-        }catch(Exception e){
-        	System.out.println("Unable to receive anymore files");
-        }
-        System.out.println("Received all files");
-        System.out.println();
+		System.out.println();
+		System.out.println("Receiving files for sharing");
+		try{
+			while(true){
+				String str = (String)in3.readObject();
+				if(str.equals("DONE SHARING FILES")){
+					break;
+				}
+				System.out.println(str);
+				server.addFile(str,this);
+			}
+		}catch(Exception e){
+			System.out.println("Unable to receive anymore files");
+		}
+		System.out.println("Received all files");
+		System.out.println();
     }
 	
 	private void requestFile(String str){
-        ArrayList<String> results = server.getList(str);
-        try{
-            System.out.println();
-            System.out.println("Matching results");
-            for(int i=0;i<results.size();i++){
-                System.out.println(results.get(i));
-                out3.writeObject(results.get(i));
-                out3.flush();
-            }
-            System.out.println("End of results");
-            System.out.println();
-            String temp = "DONE SENDING RESULTS";
-            out3.writeObject(temp);
-            out3.flush();
-            int num = (int)in3.readObject();
-            if(num == 0)
-            	return;
-            num--;
-            server.sendFile(out1,out3,results.get(num));
-        }catch(Exception e){
-            System.out.println("Cannot send the requested file");
-        }
-    }
+		ArrayList<String> results = server.getList(str);
+		try{
+			System.out.println();
+			System.out.println("Matching results");
+			for(int i=0;i<results.size();i++){
+				System.out.println(results.get(i));
+				out3.writeObject(results.get(i));
+				out3.flush();
+			}
+			System.out.println("End of results");
+			System.out.println();
+			String temp = "DONE SENDING RESULTS";
+			out3.writeObject(temp);
+			out3.flush();
+			int num = (int)in3.readObject();
+			if(num == 0)
+				return;
+			num--;
+			server.sendFile(out1,out3,results.get(num));
+		}catch(Exception e){
+			System.out.println("Cannot send the requested file");
+		}
+	}
 	
 	public void sendFile(OutputStream oout1,ObjectOutputStream oout2,String fname){
-        try{
-        	System.out.println("Sending file " + fname);
-            out4.writeObject(fname);
-            out4.flush();
-            long len = (Long)in4.readObject();
-        	oout2.writeObject(fname);
-        	oout2.flush();
-        	oout2.writeObject(len);
-        	oout2.flush();
-            byte[] bytes = new byte[16384];
-            int count;
-            long sum = 0;
-            while ((count = in2.read(bytes)) > 0) {
-            	sum += count;
-                oout1.write(bytes, 0, count);
-                oout1.flush();
-                if(sum==len)
-                	break;
-            }
-            System.out.println("Finished sending " + fname);
-        }catch(Exception e){
-            System.out.println("Unable to send file");
-        }
-    }
+		try{
+			System.out.println("Sending file " + fname);
+			out4.writeObject(fname);
+			out4.flush();
+			long len = (Long)in4.readObject();
+			oout2.writeObject(fname);
+			oout2.flush();
+			oout2.writeObject(len);
+			oout2.flush();
+			byte[] bytes = new byte[16384];
+			int count;
+			long sum = 0;
+			while ((count = in2.read(bytes)) > 0) {
+				sum += count;
+				oout1.write(bytes, 0, count);
+				oout1.flush();
+				if(sum==len)
+					break;
+			}
+			System.out.println("Finished sending " + fname);
+		}catch(Exception e){
+			System.out.println("Unable to send file");
+		}
+	}
 	
 	private void closeStreams(){
 		try{
